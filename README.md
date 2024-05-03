@@ -3,11 +3,14 @@
 The [dotsig][self] software lets you create and verify digital signatures
 using RSA cryptography (PKCS1 v1.5), PGP and elliptic-curve cryptography (ECDSA).
 
+You can find the reference documentation [here][docs].
+
 This software is released under the [3-Clause BSD License](./LICENSE).
 
 [![Latest release](https://img.shields.io/github/v/release/evias/dotsig)](#releases)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)][issues]
+[![Reference documentation](https://img.shields.io/badge/Reference%20documentation-blue)][docs]
 [![3-Clause BSD License](https://img.shields.io/github/license/evias/dotsig)](./LICENSE)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)][issues]
 
 ## Releases
 
@@ -101,5 +104,5 @@ Copyright 2024 Grégory Saive <greg@evi.as> for re:Software S.L. (resoftware.es)
 Licensed under the [3-Clause BSD License](./LICENSE).
 
 [self]: https://github.com/evias/dotsig
-[docs]: https://dotsig.evi.as
+[docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
 [issues]: https://github.com/evias/dotsig/issues
