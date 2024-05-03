@@ -1,0 +1,173 @@
+.\" Manpage for dotsig.
+.\" Contact greg@evi.as to correct errors or typos.
+.TH dotsig 1 "02 May 2024" "1.0" "dotsig User Manual"
+.SH NAME
+\fBdotsig\fP \- Sign a message or file with DSA and verify digital signatures
+.SH SYNOPSIS
+.B dotsig
+[-vhcDq] [-i id_file] [-P pub_key] [-a algo] [-p passphrase] [file ...]
+.SH DESCRIPTION
+.I dotsig
+is a high level shell program that lets you create and verify digital signatures
+using RSA cryptography (PKCS1 v1.5), PGP and elliptic-curve cryptography, ECDSA.
+.PP
+This software is inspired by the numerous Unix programs in that it can be used
+for the singular task of creating- or verifying digital signatures. The input(s)
+to \fIdotsig\fP can be piped via the standard input, and it accepts multiple
+files to be signed or verified individually.
+.PP
+As shown in the examples below, creating a digital signature for a message is
+trivial and can be achieved with one of the following commands:
+.br
+.RS 2
+\fB$ echo 'Your Message' | dotsig\fP
+.br
+\fB$ dotsig < path/to/file\fP
+.br
+\fB$ dotsig < path/to/file > path/to/signature.sig\fP
+.br
+\fB$ dotsig path/to/file\fP
+.SH OPTIONS
+.PP
+.I dotsig
+allows several options to be passed to the program, none of these are required.
+The following options are accepted:
+.RS 2
+.PP
+\fBfile ...\fR
+.br
+.RS 2
+Determines the document(s) to sign/verify. e.g.: path/to/document1 document2
+.RE
+.br
+\fB\-p passphrase\fR
+.br
+.RS 2
+Uses given passphrase to unlock the identity file.
+.RE
+.br
+\fB\-a algo\fR
+.br
+.RS 2
+Uses given DSA standard. Supported are: ecdsa, pkcs.
+.RE
+.br
+\fB\-i id_file\fR
+.br
+.RS 2
+Uses given identity file (e.g.: id_rsa).
+.RE
+.br
+\fB\-P pub_key\fR
+.br
+.RS 2
+Uses given public key file (e.g.: id_rsa.pub).
+.RE
+.br
+\fB\-v\fR
+.br
+.RS 2
+Prints the program version information.
+.RE
+.br
+\fB\-h\fR
+.br
+.RS 2
+Prints the help message and usage examples.
+.RE
+.br
+\fB\-c\fR
+.br
+.RS 2
+Enables the verification mode for digital signatures.
+.RE
+.br
+\fB\-D\fR
+.br
+.RS 2
+Enables the debug mode for the program.
+.RE
+.br
+\fB\-q\fR
+.br
+.RS 2
+Enables the quiet mode for the program.
+.RE
+.SH EXAMPLES
+.PP
+To sign or verify a \fIfile\fP with \fBECDSA\fP and your default identity, use:
+.br
+.RS 2
+\fBdotsig\fP \fIpath/to/document\fP
+.br
+\fBdotsig -c\fP \fIpath/to/signature.sig\fP
+.RE
+.PP
+To sign or verify a \fIfile\fP with \fBPKCS\fP and your default identity, use:
+.br
+.RS 2
+\fBdotsig -a pkcs\fP \fIpath/to/document\fP
+.br
+\fBdotsig -c -a pkcs\fP \fIpath/to/signature.sig\fP
+.RE
+.PP
+To sign/verify a \fImessage\fP with \fBECDSA\fP and your default identity, use:
+.br
+.RS 2
+\fBecho 'Hello, World!' | dotsig\fP
+.br
+\fBecho 'Hello, World!' | dotsig -c\fP \fIpath/to/signature.sig\fP
+.RE
+.PP
+To sign/verify a \fImessage\fP with \fBECDSA\fP and your default identity, use:
+.br
+.RS 2
+\fBecho 'Hello, World!' | dotsig -a pkcs\fP
+.br
+\fBecho 'Hello, World!' | dotsig -c -a pkcs\fP \fIpath/to/signature.sig\fP
+.RE
+.PP
+Example of a full-cycle of creation of a digital signature and later
+.br
+verification of the produced signature file (using STDIN):
+.br
+.RS 2
+\fBecho 'Hello, World!' | dotsig\fP
+.br
+\fBecho 'Hello, World!' | dotsig -c stdin.sig\fP
+.RE
+.SH "SEE ALSO"
+botan(1)
+.SH BUGS
+.I dotsig
+is able to consume data that gets piped to it via standard input; yet it will
+require the user to \fIstop input\fP using Ctrl+D on Unix systems and Ctrl+Z on
+Windows systems. While this may not be directly a bug, it is not intentional
+and therefor listed as a known issue.
+.SH COPYRIGHT
+Copyright 2024 Grégory Saive <greg@evi.as> for re:Software S.L. (resoftware.es).
+.PP
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+.PP
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+.PP
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+.PP
+3. Neither the name of the copyright holder nor the names of its contributors
+   may be used to endorse or promote products derived from this software without
+   specific prior written permission.
+.PP
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
