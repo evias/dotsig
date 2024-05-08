@@ -17,7 +17,7 @@ This software is released under the [3-Clause BSD License](./LICENSE).
 The `dotsig` software is currently under active development and frequent changes
 to the source code *are to be expected* until the software reaches a stable tag.
 
-The latest release as of May 2nd 2024 is: `v1.0.0-beta`.
+The latest release as of May 8th 2024 is: `v1.0.0-beta.3`.
 
 Use `dotsig -v` to find out the version installed on your system.
 
@@ -145,7 +145,7 @@ Copyright 2024 Grégory Saive <greg@evi.as> for re:Software S.L. (resoftware.es)
 Licensed under the [3-Clause BSD License](./LICENSE).
 
 [self]: https://github.com/evias/dotsig
-[download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
+[download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
 [docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
 [issues]: https://github.com/evias/dotsig/issues
 [botan-src]: https://github.com/randombit/botan

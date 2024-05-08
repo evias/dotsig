@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0-beta.2 - 2024-05-08 
+## v1.0.0-beta.3 - 2024-05-08 
 
 ### Added
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: fix changelog, add reference documentation to readme
 - fix: missing includes filesystem and algorithm
 - build: removed manual Makefile targets, use cmake instead
+- build: use statically linked botan and libstdc++ (temporary)
 
 ## v1.0.0-beta - 2024-05-03
 
@@ -34,4 +35,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 v1.0.0-beta: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
-v1.0.0-beta.2: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.2
+v1.0.0-beta.3: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
