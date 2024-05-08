@@ -64,6 +64,10 @@ You will need to install the **Botan** library on your host computer. You can do
 this *manually* using the instructions provided in the [Botan build instructions][botan].
 The source code repository for Botan can be found on [Github][botan-src].
 
+Note that the current `CMakeLists.txt` *statically links* the `libstdc++` package
+and it may be that cmake can't find it due to the restrictive `HINTS` added in the
+build instructions.
+
 #### Build the source code
 
 A *CMakeLists.txt* file is provided to overcome the necessity of building the
