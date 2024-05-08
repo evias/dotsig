@@ -56,21 +56,13 @@ that unlocks the private key.
 Following dependencies must be installed on the host system if you want to build
 the `dotsig` software from its source code:
 
-- g++-12 or newer (must have support for `-std=c++-20`)
-- libc6 with v2.25 (must have support for `explicit_bzero`)
+- g++-11 or newer (must have support for `-std=c++-20`)
 - Python v3.6.10 (`python3 -V`)
 - Botan v3.4.0
 
 You will need to install the **Botan** library on your host computer. You can do
-this *manually* using the instructions provided in the [Botan Github][botan].
-
-This software has been built using a relatively recent version of `g++-13.2.0`,
-to enable it after having compiled the compiler [pardon the confusion here], you
-can simply use the `-DCMAKE_CXX_COMPILER=g++-13` *configuration* flag, e.g.:
-
-```bash
-cmake .. -DCMAKE_CXX_COMPILER=g++-13
-```
+this *manually* using the instructions provided in the [Botan build instructions][botan].
+The source code repository for Botan can be found on [Github][botan-src].
 
 #### Build the source code
 
@@ -79,13 +71,20 @@ package. This is currently the preferred method to build the `dotsig` software.
 
 ```bash
 cd build
-cmake .. -DCMAKE_C_COMPILER=gcc-13 -DCMAKE_CXX_COMPILER=g++-13
+cmake ..
 cmake --build .
 cmake --build . --target install
 ```
 
 :soon: In the short-to-mid-term future, I plan to enable the installations using
 popular package managers including: `apt`, `rpm` and `snap`.
+
+### Installing the user manual
+
+A `man` user manual is available with `docs/dotsig.1`, you can install it on your
+system using the `make install-man` command from the root project folder.
+
+You can also directly use this file to open it with man: `man docs/dotsig.1`.
 
 ## Examples
 
@@ -145,4 +144,5 @@ Licensed under the [3-Clause BSD License](./LICENSE).
 [download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
 [docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
 [issues]: https://github.com/evias/dotsig/issues
-[botan]: https://github.com/randombit/botan
+[botan-src]: https://github.com/randombit/botan
+[botan]: https://botan.randombit.net/handbook/building.html
