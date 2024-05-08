@@ -8,7 +8,7 @@
 #include <iostream> // std::cout
 #include <initializer_list> // std::initializer_list
 
-const dotsig::SEMVER_VERSION dotsig::VERSION = {1,0,0, "beta"};
+const dotsig::SEMVER_VERSION dotsig::VERSION = {1,0,0, "beta.2"};
 
 int dotsig::print_usage() {
   std::cout
