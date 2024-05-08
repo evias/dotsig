@@ -10,6 +10,7 @@
 #include <string> // std::string
 #include <vector> // std::vector
 #include <map> // std::map
+#include <algorithm> // std::find
 
 namespace dotsig {
 

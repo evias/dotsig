@@ -9,6 +9,7 @@
 #include <iostream> // std::cout, std::cin
 #include <fstream> // std::ifstream
 #include <sstream> // std::stringstream
+#include <filesystem> // std::filesystem
 
 dotsig::args_t dotsig::OPTIONS{};
 

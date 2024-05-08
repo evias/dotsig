@@ -10,7 +10,7 @@ This software is released under the [3-Clause BSD License](./LICENSE).
 [![Latest release](https://img.shields.io/github/v/release/evias/dotsig)](#releases)
 [![Reference documentation](https://img.shields.io/badge/Reference%20documentation-blue)][docs]
 [![3-Clause BSD License](https://img.shields.io/github/license/evias/dotsig)](./LICENSE)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)][issues]
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)][issues]
 
 ## Releases
 
@@ -23,18 +23,17 @@ Use `dotsig -v` to find out the version installed on your system.
 
 ## Getting started
 
-### Build and install the software
+### Using the pre-built executable
 
-A *Makefile* is provided to overcome the necessity of building the package. This
-is currently the preferred method to install the `dotsig` software.
+Download the [latest version of `dotsig` here][download] for your system and
+install it. Then run one of the commands below to check that your installation
+works:
 
-```bash
-make
-make install
 ```
-
-:soon: In the short-to-mid-term future, I plan to enable the installation using popular
-package managers including: `apt`, `rpm` and `snap`.
+dotsig -v
+dotsig -h
+echo 'Hello, world!' | dotsig
+```
 
 ### Cross-platform Identities
 
@@ -50,9 +49,48 @@ identity files are stored in `~/.dotsig`.
 (e.g. `-i ~/.ssh/id_rsa`) provided that you are in possession of the passphrase
 that unlocks the private key.
 
+### Developers notes
+
+#### Install required dependencies
+
+Following dependencies must be installed on the host system if you want to build
+the `dotsig` software from its source code:
+
+- g++-12 or newer (must have support for `-std=c++-20`)
+- libc6 with v2.25 (must have support for `explicit_bzero`)
+- Python v3.6.10 (`python3 -V`)
+- Botan v3.4.0
+
+You will need to install the **Botan** library on your host computer. You can do
+this *manually* using the instructions provided in the [Botan Github][botan].
+
+This software has been built using a relatively recent version of `g++-13.2.0`,
+to enable it after having compiled the compiler [pardon the confusion here], you
+can simply use the `-DCMAKE_CXX_COMPILER=g++-13` *configuration* flag, e.g.:
+
+```bash
+cmake .. -DCMAKE_CXX_COMPILER=g++-13
+```
+
+#### Build the source code
+
+A *CMakeLists.txt* file is provided to overcome the necessity of building the
+package. This is currently the preferred method to build the `dotsig` software.
+
+```bash
+cd build
+cmake .. -DCMAKE_C_COMPILER=gcc-13 -DCMAKE_CXX_COMPILER=g++-13
+cmake --build .
+cmake --build . --target install
+```
+
+:soon: In the short-to-mid-term future, I plan to enable the installations using
+popular package managers including: `apt`, `rpm` and `snap`.
+
 ## Examples
 
 By default, this software uses the **ECDSA** standard to sign/verify documents.
+You can change the algorithm used between `ecdsa` and `pkcs` using e.g.: `-a pkcs`.
 
 To sign/verify a file with *ECDSA* and your default identity `~/id_ecdsa`, use:
 
@@ -104,5 +142,7 @@ Copyright 2024 Grégory Saive <greg@evi.as> for re:Software S.L. (resoftware.es)
 Licensed under the [3-Clause BSD License](./LICENSE).
 
 [self]: https://github.com/evias/dotsig
+[download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
 [docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
 [issues]: https://github.com/evias/dotsig/issues
+[botan]: https://github.com/randombit/botan
