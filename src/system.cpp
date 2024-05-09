@@ -9,7 +9,7 @@
 #include <filesystem> // std::filesystem
 
 #ifdef _MSC_VER
-  #include <dirent.h>
+  #include <direct.h>
 #endif
 
 #if defined(__unix__) || defined(__APPLE__)
@@ -26,12 +26,14 @@ std::string dotsig::get_platform_stdin() {
 }
 
 std::string dotsig::get_storage_path() {
-  std::string path = std::string(getenv("APPDATA")).append("\\.dotsig");
-  std::filesystem::directory_entry entry{path};
+  std::filesystem::path root = std::string(getenv("APPDATA"));
+  std::string app_dir = std::string("dotsig");
+
+  std::filesystem::directory_entry entry{root / app_dir};
   if (!entry.exists()) {
-    _mkdir(path.data());
+    std::filesystem::create_directories(path / app_dir);
   }
-  return path + "\\";
+  return (root / app_dir).string();
 }
 
 DWORD dotsig::supress_echo() {
@@ -43,6 +45,7 @@ DWORD dotsig::supress_echo() {
 }
 
 void dotsig::cleanup_echo(DWORD mode) {
+  HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
   SetConsoleMode(hStdin, mode);
 }
 

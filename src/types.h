@@ -10,6 +10,7 @@
 #include <vector> // std::vector
 #include <string> // std::string
 #include <algorithm> // std::find
+#include <filesystem> // std::filesystem
 #include "functions.h" // dotsig::strtolower
 #include "system.h" // dotsig::get_storage_path
 
@@ -53,7 +54,8 @@ namespace dotsig {
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}
-    return get_storage_path().append(file);
+    std::filesystem::path storage = get_storage_path();
+    return (storage / file).string();
   }
 
   /// \brief Returns the file path to a potential public identity file.
@@ -71,7 +73,8 @@ namespace dotsig {
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}
-    return get_storage_path().append(file);
+    std::filesystem::path storage = get_storage_path();
+    return (storage / file).string();
   }
 
 }
