@@ -27,13 +27,14 @@ std::string dotsig::get_platform_stdin() {
 
 std::string dotsig::get_storage_path() {
   std::filesystem::path root = std::string(getenv("APPDATA"));
-  std::string app_dir = std::string("dotsig");
+  std::string app_dir = std::string("dotsig"),
+              app_path = (root / app_dir).string();
 
-  std::filesystem::directory_entry entry{root / app_dir};
+  std::filesystem::directory_entry entry{app_path};
   if (!entry.exists()) {
-    std::filesystem::create_directories(path / app_dir);
+    std::filesystem::create_directories(app_path);
   }
-  return (root / app_dir).string();
+  return app_path;
 }
 
 DWORD dotsig::supress_echo() {
@@ -56,12 +57,15 @@ std::string dotsig::get_platform_stdin() {
 }
 
 std::string dotsig::get_storage_path() {
-  std::string path = std::string(getenv("HOME")).append("/.dotsig");
-  std::filesystem::directory_entry entry{path};
+  std::filesystem::path root = std::string(getenv("HOME"));
+  std::string app_dir = std::string(".dotsig"),
+              app_path = (root / app_dir).string();
+
+  std::filesystem::directory_entry entry{app_path};
   if (!entry.exists()) {
-    mkdir(path.data(), 0700); // owner-only
+    mkdir(app_path.data(), 0700); // owner-only
   }
-  return path + "/";
+  return app_path;
 }
 
 termios dotsig::supress_echo() {
