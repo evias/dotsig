@@ -49,7 +49,7 @@ const dotsig::PKCS::ParentType& dotsig::PKCS::Identity::Import(
 
   // try to import an unencrypted public-key (from: id_rsa.pub, id_ecdsa.pub)
   try {
-    Botan::DataSource_Stream input(filename);
+    Botan::DataSource_Stream input(filename); // non-binary mode (PEM)
     std::unique_ptr<Botan::Public_Key> pub = Botan::X509::load_key(input);
 
     m_public_key = std::make_unique<dotsig::PKCS::PublicKey>(
@@ -63,7 +63,7 @@ const dotsig::PKCS::ParentType& dotsig::PKCS::Identity::Import(
 
   // or try to load using an encrypted private key (from: id_rsa, id_ecdsa)
   try {
-    Botan::DataSource_Stream input(filename);
+    Botan::DataSource_Stream input(filename, true); // binary mode (BER)
     std::unique_ptr<Botan::Private_Key> priv = Botan::PKCS8::load_key(
       input,
       passphrase
@@ -98,7 +98,7 @@ void dotsig::PKCS::Identity::Export(
 
   Botan::AutoSeeded_RNG rng;
   auto priv_bytes = Botan::PKCS8::BER_encode(*m_private_key, rng, passphrase);
-  auto pub_bytes  = Botan::X509::PEM_encode(*m_public_key);
+  auto pub_bytes  = Botan::X509::PEM_encode(*m_public_key); // expects pubkey
 
   std::ofstream out_priv(filename),
                 out_pub(filename + ".pub");
