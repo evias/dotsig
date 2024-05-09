@@ -39,22 +39,22 @@ file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/README.md ${CMAKE_CURRENT_BINARY_DIR}/RE
 # sources
 add_subdirectory(src/)
 add_executable(dotsig ${DOTSIG_SOURCES} src/main.cpp)
-add_library(Botan-static INTERFACE ${BOTAN_HEADER_FILES})
+add_library(Botan-source INTERFACE ${BOTAN_HEADER_FILES})
 
 # link main
 target_include_directories(dotsig PUBLIC ${BOTAN_INCLUDE_PATH})
 target_link_libraries(
   dotsig
-  Botan-static
-  ${BOTAN_LIB}
   ${libstdcpp-static}
   ${OTHER_LIBS}
+  ${BOTAN_LIB}
+  Botan-source
 )
 
 # installation
 install(TARGETS dotsig)
 if (WIN32)
-  install(FILES ${BOTAN_DLL})
+  install(FILES ${BOTAN_DLL} DESTINATION bin)
 endif()
 
 # package managers
