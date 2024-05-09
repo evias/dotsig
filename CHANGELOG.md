@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta.4 - 2024-05-09
+
+### Added
+
+- build: add installers config (cpack) and fix windows builds
+- docs: add Windows build instructions
+- feat: use std::filesystem::path for storage path building
+
+### Changed
+
+- fix: add binary-mode switch for DataSource_Stream imports
+- fix: use std::filesystem for get_storage_path() (windows fix)
+
 ## v1.0.0-beta.3 - 2024-05-08 
 
 ### Added
@@ -34,5 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create and verify digital signatures with PKCS using files and/or stdin.
 
 
-v1.0.0-beta: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
-v1.0.0-beta.3: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
+## All Versions
+
+- v1.0.0-beta: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
+- v1.0.0-beta.3: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
+- v1.0.0-beta.4: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.4

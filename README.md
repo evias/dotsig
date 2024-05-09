@@ -8,6 +8,7 @@ You can find the reference documentation [here][docs].
 This software is released under the [3-Clause BSD License](./LICENSE).
 
 [![Latest release](https://img.shields.io/github/v/release/evias/dotsig)](#releases)
+[![Total downloads](https://img.shields.io/github/downloads/evias/dotsig/total)][download]
 [![Reference documentation](https://img.shields.io/badge/Reference%20documentation-blue)][docs]
 [![3-Clause BSD License](https://img.shields.io/github/license/evias/dotsig)](./LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)][issues]
@@ -17,7 +18,7 @@ This software is released under the [3-Clause BSD License](./LICENSE).
 The `dotsig` software is currently under active development and frequent changes
 to the source code *are to be expected* until the software reaches a stable tag.
 
-The latest release as of May 8th 2024 is: `v1.0.0-beta.3`.
+The latest release as of May 8th 2024 is: [`v1.0.0-beta.4`][download].
 
 Use `dotsig -v` to find out the version installed on your system.
 
@@ -77,7 +78,8 @@ package. This is currently the preferred method to build the `dotsig` software.
 cd build
 cmake ..
 cmake --build .
-cmake --build . --target install
+cmake --build . --target install -- DESTDIR=stage
+cd stage/usr/local/bin
 ```
 
 :soon: In the short-to-mid-term future, I plan to enable the installations using
@@ -95,6 +97,31 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
 nmake
 cmake --build . --target install -- DESTDIR=stage
 cd "stage/Program Files (x86)/dotsig/bin"
+```
+
+#### Creating installer packages
+
+The `cpack` utility can be used to create installer packages for different OSs.
+It is more comfortable for the end-user to receive an installer package rather
+than being able to download only the binaries, for Windows it is also necessary
+because of the `botan-3.dll` file that is needed to run the software.
+
+To create an installer package *after* having built your source tree with one of
+the above commands, and using the corresponding operating system, use:
+
+```bash
+# MacOS .sh, .tar.gz, .pkg
+cpack -G "STGZ"
+cpack -G "TGZ"
+cpack -G "productbuild"
+
+# Linux .tar.gz, .deb, .rpm
+cpack -G "TGZ"
+cpack -G "DEB"
+cpack -G "RPM"
+
+# Windows .zip
+cpack -G "ZIP"
 ```
 
 ### Installing the user manual
@@ -159,7 +186,7 @@ Copyright 2024 Grégory Saive <greg@evi.as> for re:Software S.L. (resoftware.es)
 Licensed under the [3-Clause BSD License](./LICENSE).
 
 [self]: https://github.com/evias/dotsig
-[download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
+[download]: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.4
 [docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
 [issues]: https://github.com/evias/dotsig/issues
 [botan-src]: https://github.com/randombit/botan
