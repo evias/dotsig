@@ -83,6 +83,20 @@ cmake --build . --target install
 :soon: In the short-to-mid-term future, I plan to enable the installations using
 popular package managers including: `apt`, `rpm` and `snap`.
 
+#### Build using Windows
+
+If you are using a Windows operating system, you will need a couple of special
+configuration commands after having built the Botan library locally. To start
+configuring a Windows build, use:
+
+```bash
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
+nmake
+cmake --build . --target install -- DESTDIR=stage
+cd "stage/Program Files (x86)/dotsig/bin"
+```
+
 ### Installing the user manual
 
 A `man` user manual is available with `docs/dotsig.1`, you can install it on your
