@@ -23,7 +23,8 @@ else()
   find_file(
     libstdcpp-static
     libstdc++.a
-    HINTS /usr/local/gcc-13.2.0
+    HINTS /usr/local/gcc-13.2.0/lib
+    HINTS /usr/local/gcc-13.2.0/lib64
     HINTS /usr/local/lib/gcc/current
   )
 endif()
@@ -60,6 +61,9 @@ endif()
 # package managers
 set(CPACK_PACKAGE_NAME "dotsig")
 set(CPACK_PACKAGE_VENDOR "evi.as")
+set(CPACK_PACKAGE_CONTACT "Grégory Saive <greg@evi.as>")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Grégory Saive <greg@evi.as>")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 string(
   CONCAT dotsig_description
   "dotsig is a powerful tool to create and verify "
@@ -69,8 +73,18 @@ string(
 set(CPACK_PACKAGE_DESCRIPTION ${dotsig_description})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${dotsig_description})
 set(CPACK_PACKAGE_EXECUTABLES "dotsig;dotsig")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_BINARY_DIR}/README.txt")
 set(CPACK_NSIS_PACKAGE_NAME "dotsig")
 
+# permissions
+set(
+    CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
+    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE
+    WORLD_READ WORLD_EXECUTE
+)
+
+# wrap package
 include(CPack)
