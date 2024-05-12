@@ -23,9 +23,9 @@ namespace dotsig {
   class Factory {
     /// \brief The factories registry as a map.
     ///
-    /// Keys are supported algorithm names, e.g. "ecdsa" or "pkcs", and values
-    /// are *function pointers* that shall execute the *pointer creation* for
-    /// the provided class templates based on IIdentity.
+    /// Keys are supported algorithm names, e.g. "ecdsa", "pkcs" or "openpgp",
+    /// and values are *function pointers* that shall execute the pointer creation
+    /// for the provided class templates based on IIdentity.
     /// \see Register
     std::map<std::string, std::function<IIdentity* ()>> m_factories{};
 

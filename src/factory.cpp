@@ -7,6 +7,7 @@
 #include "factory.h"
 #include "ecdsa.h" // dotsig::ECDSA::Identity
 #include "pkcs.h" // dotsig::PKCS::Identity
+#include "openpgp.h" // dotsig::OpenPGP::Identity
 
 bool dotsig::Factory::Register(
   const std::string& id,
@@ -32,5 +33,10 @@ void dotsig::InitializeFactory(dotsig::Factory* factory) {
   // enables PKCS standard
   factory->Register("pkcs", [] {
     return new dotsig::PKCS::Identity();
+  });
+
+  // enables OpenPGP standard
+  factory->Register("openpgp", [] {
+    return new dotsig::OpenPGP::Identity();
   });
 }

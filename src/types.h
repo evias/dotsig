@@ -19,7 +19,8 @@ namespace dotsig {
   /// \brief Contains the supported DSA types that can be used with dotsig.
   std::vector<std::string> TYPES = {
     "ecdsa",
-    "pkcs"
+    "pkcs",
+    "openpgp"
   };
 
   /// \brief Returns one of the supported DSA types as listed in \see TYPES.
@@ -49,7 +50,7 @@ namespace dotsig {
     std::string algo = get_dsa_type(dsa),
                 file = "id_ecdsa";
 
-    if (algo == "pkcs")
+    if (algo == "pkcs" || algo == "openpgp")
       file = "id_rsa";
 
     // if the storage path does not exist, creates the directory
@@ -68,7 +69,7 @@ namespace dotsig {
     std::string algo = get_dsa_type(dsa),
                 file = "id_ecdsa.pub";
 
-    if (algo == "pkcs")
+    if (algo == "pkcs" || algo == "openpgp")
       file = "id_rsa.pub";
 
     // if the storage path does not exist, creates the directory

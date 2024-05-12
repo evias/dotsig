@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
   std::string pass = dotsig::get_option("-p");
   if (pass.empty() || pass == "-") pass = dotsig::get_password();
 
-  // accepts "ecdsa" (default) or "pkcs"
+  // accepts "ecdsa" (default) or "pkcs" or "openpgp"
   algo = dotsig::get_dsa_type(algo);
 
   debug() << "Mode: "

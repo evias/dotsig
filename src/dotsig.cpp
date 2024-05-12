@@ -8,7 +8,7 @@
 #include <iostream> // std::cout
 #include <initializer_list> // std::initializer_list
 
-const dotsig::SEMVER_VERSION dotsig::VERSION = {1,0,0, "beta.4"};
+const dotsig::SEMVER_VERSION dotsig::VERSION = {1,1,0, "alpha.1"};
 
 int dotsig::print_usage() {
   std::cout
@@ -20,7 +20,7 @@ int dotsig::print_usage() {
     << "\nOPTIONS: \n"
     << "  file: Determines the document(s) to sign/verify.\n"
     << "  -p passphrase: Uses given passphrase to unlock the identity file.\n"
-    << "  -a algo: Uses given DSA standard. Supported are: ecdsa, pkcs.\n"
+    << "  -a algo: Uses given DSA standard, supports: ecdsa, pkcs and openpgp.\n"
     << "  -i id_file: Uses given identity file (e.g.: id_rsa).\n"
     << "  -P pub_key: Uses given public key file (e.g.: id_rsa.pub).\n"
     << "\nFLAGS: \n"
