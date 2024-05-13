@@ -15,23 +15,39 @@
 
 namespace dotsig {
 
-  // OpenPGP DSA
+  /// \brief Type used to describe DSA private keys.
+  /// \see dotsig::OpenPGP::DSA_Identity
   typedef Botan::DSA_PrivateKey OpenPGP_DSA_PrivateKey;
+
+  /// \brief Type used to describe DSA public keys.
+  /// \see dotsig::OpenPGP::DSA_Identity
   typedef Botan::DSA_PublicKey  OpenPGP_DSA_PublicKey;
 
-  // OpenPGP RSA with PKCS1 v1.5
+  /// \brief Type used to describe RSA PKCS1 v1.5 private keys.
+  /// \see dotsig::OpenPGP::RSA_Identity
   typedef dotsig::PKCS::PrivateKey OpenPGP_RSA_PrivateKey;
+
+  /// \brief Type used to describe RSA PKCS1 v1.5 public keys.
+  /// \see dotsig::OpenPGP::RSA_Identity
   typedef dotsig::PKCS::PublicKey  OpenPGP_RSA_PublicKey;
 
-  // OpenPGP ECDSA
+  /// \brief Type used to describe ECDSA (secp256) private keys.
+  /// \see dotsig::OpenPGP::ECDSA_Identity
   typedef dotsig::ECDSA::PrivateKey OpenPGP_ECDSA_PrivateKey;
+
+  /// \brief Type used to describe ECDSA (secp256) public keys.
+  /// \see dotsig::OpenPGP::ECDSA_Identity
   typedef dotsig::ECDSA::PublicKey  OpenPGP_ECDSA_PublicKey;
 
-  // OpenPGP EdDSA
+  /// \brief Type used to describe EdDSA (secp256) private keys.
+  /// \see dotsig::OpenPGP::EdDSA_Identity
   typedef dotsig::ECDSA::PrivateKey OpenPGP_EdDSA_PrivateKey;
+
+  /// \brief Type used to describe EdDSA (secp256) private keys.
+  /// \see dotsig::OpenPGP::EdDSA_Identity
   typedef dotsig::ECDSA::PublicKey  OpenPGP_EdDSA_PublicKey;
 
-/// \brief Namespace that contains the OpenPGP identities class template.
+/// \brief Namespace that contains the OpenPGP identity classes (and templates).
 namespace OpenPGP {
 
   /// \brief Template class for OpenPGP identities that consist of a private/public
@@ -45,21 +61,21 @@ namespace OpenPGP {
   /// and public_key_bits, as found in Botan::Private_Key and Botan::Public_Key.
   ///
   /// \note The OpenPGP standard defines compatibility with multiple digital
-  /// signature algorithms including: RSA (PKCS1 v1.5) [default], DSA, ECDSA, EdDSA).
+  /// signature algorithms including: RSA (PKCS1 v1.5) [default], DSA, ECDSA, EdDSA.
   ///
   /// \note Also, the OpenPGP standard is different from basic ECDSA and PKCS
-  /// implementations because it uses a concept of armored messages and keys.
-  /// The actual raw signatures produced using OpenPGP identities *do not differ*
+  /// implementations because it uses a concept of armored messages and keys. Yet,
+  /// the actual raw signatures produced using OpenPGP identities *do not differ*
   /// from signatures created using the PKCS::Identity and ECDSA::Identity
   /// classes.
   ///
-  /// \note This identity wrapper exports BER-encoded private keys to the user's
-  /// home folder, in a file named `id_openpgp` and it exports PEM-encoded public
-  /// keys to the user's home folder, in a file named `id_openpgp.pub`.
+  /// \tparam PrivateKeyImpl The private key implementation class.
+  /// \tparam PublicKeyImpl  The public key implementation class.
+  /// \tparam SubKeyImpl     The sub (child) key implementation class.
   ///
+  /// \todo Implement sub-keys as defined by the OpenPGP standard.
   /// \todo Implement expiration logic and signature/keys revocation strategies.
-  /// \todo Diverge from original DSA implementations by usage of **subkeys**.
-  ///
+  /// \todo Diverge from original PKA implementations by usage of **subkeys**.
   /// \see dotsig::IIdentity
   template <
     class PrivateKeyImpl,
@@ -70,7 +86,7 @@ namespace OpenPGP {
     : public IIdentity
   {
   protected:
-    typedef std::unique_ptr<SubKeyImpl> SubKeyUniquePtr;
+    //typedef std::unique_ptr<SubKeyImpl> SubKeyUniquePtr;
     std::unique_ptr<PrivateKeyImpl> m_private_key;
 
   public:
@@ -83,8 +99,8 @@ namespace OpenPGP {
     /// \brief Contains a *padding scheme with hash function* in the case of
     ///        OpenPGP with RSA (PKCS1 v1.5), otherwise contains a *hash function*.
     /// \example "PKCS1v15(SHA-256)" // padding scheme and hash function
-    /// \example "SHA-256" // hash function only (used in OpenPGP::ECDSA_Identity)
-    /// \example "SHA-512" // hash function only (used in OpenPGP::EdDSA_Identity)
+    /// \example "SHA-256" // hash function (used in OpenPGP::ECDSA_Identity)
+    /// \example "SHA-512" // hash function (used in OpenPGP::EdDSA_Identity)
     std::string                     m_scheme;
 
     /// \brief Default constructor. Creates an empty OpenPGP identity.
@@ -178,7 +194,7 @@ namespace OpenPGP {
     /// \see Export
     DSA_Identity() : OpenPGP_DSA_ParentType("SHA-256") {}
 
-    /// \brief Copy constructor. Creates an identity based on the other's RSA private key.
+    /// \brief Copy constructor. Creates an identity based on the other's private key.
     DSA_Identity(const DSA_Identity& o) : OpenPGP_DSA_ParentType(o) {}
 
     /// \brief Class destructor which uses the opportunity for zeroing keys.
@@ -189,7 +205,6 @@ namespace OpenPGP {
     /// \see Export
     void GenerateRandom() override;
   };
-
 
   /// \brief Class template specialization for OpenPGP ECDSA identities.
   /// \see dotsig::OpenPGP::Identity
@@ -224,7 +239,7 @@ namespace OpenPGP {
     /// \see Export
     ECDSA_Identity() : OpenPGP_ECDSA_ParentType("SHA-256") {}
 
-    /// \brief Copy constructor. Creates an identity based on the other's RSA private key.
+    /// \brief Copy constructor. Creates an identity based on the other's private key.
     ECDSA_Identity(const ECDSA_Identity& o) : OpenPGP_ECDSA_ParentType(o) {}
 
     /// \brief Class destructor which uses the opportunity for zeroing keys.
@@ -278,13 +293,13 @@ namespace OpenPGP {
     /// \see Export
     EdDSA_Identity() : OpenPGP_EdDSA_ParentType("SHA-512") {}
 
-    /// \brief Copy constructor. Creates an identity based on the other's RSA private key.
+    /// \brief Copy constructor. Creates an identity based on the other's private key.
     EdDSA_Identity(const EdDSA_Identity& o) : OpenPGP_EdDSA_ParentType(o) {}
 
     /// \brief Class destructor which uses the opportunity for zeroing keys.
     virtual ~EdDSA_Identity();
 
-    /// \brief Generates a random pair of OpenPGP ECDSA private- and public-key.
+    /// \brief Generates a random pair of OpenPGP EdDSA (Ed25519) private- and public-key.
     /// \see Import
     /// \see Export
     void GenerateRandom() override;
@@ -323,7 +338,7 @@ namespace OpenPGP {
     /// \see Export
     RSA_Identity() : OpenPGP_RSA_ParentType("PKCS1v15(SHA-256)") {}
 
-    /// \brief Copy constructor. Creates an identity based on the other's RSA private key.
+    /// \brief Copy constructor. Creates an identity based on the other's private key.
     RSA_Identity(const RSA_Identity& o) : OpenPGP_RSA_ParentType(o) {}
 
     /// \brief Class destructor which uses the opportunity for zeroing keys.

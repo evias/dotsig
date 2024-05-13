@@ -57,13 +57,13 @@ namespace dotsig {
     if (algo == "pkcs")
       file = "id_rsa";
     else if (algo == "openpgp" || algo == "openpgp:rsa")
-      file = "id_openpgp";
+      file = "id_openpgp_rsa";
     else if (algo == "openpgp:dsa")
-      file = "id_openpgp.dsa";
+      file = "id_openpgp_dsa";
     else if (algo == "openpgp:ecdsa")
-      file = "id_openpgp.ecdsa";
+      file = "id_openpgp_ecdsa";
     else if (algo == "openpgp:eddsa")
-      file = "id_openpgp.eddsa";
+      file = "id_openpgp_eddsa";
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}
@@ -84,13 +84,13 @@ namespace dotsig {
     if (algo == "pkcs")
       file = "id_rsa.pub";
     else if (algo == "openpgp" || algo == "openpgp:rsa")
-      file = "id_openpgp.pub";
+      file = "id_openpgp_rsa.pub";
     else if (algo == "openpgp:dsa")
-      file = "id_openpgp.dsa.pub";
+      file = "id_openpgp_dsa.pub";
     else if (algo == "openpgp:ecdsa")
-      file = "id_openpgp.ecdsa.pub";
+      file = "id_openpgp_ecdsa.pub";
     else if (algo == "openpgp:eddsa")
-      file = "id_openpgp.eddsa.pub";
+      file = "id_openpgp_eddsa.pub";
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}

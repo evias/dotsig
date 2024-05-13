@@ -13,6 +13,17 @@
 namespace dotsig {
 
   /// \brief Interface for identities that consist of a private/public keypair.
+  ///
+  /// This interface declares all the methods that *must* be implemented in any
+  /// identities class template specialization.
+  ///
+  /// Method overrides must be provided by child classes.
+  ///
+  /// \see dotsig::IIdentity::GenerateRandom
+  /// \see dotsig::IIdentity::Import
+  /// \see dotsig::IIdentity::Export
+  /// \see dotsig::IIdentity::Sign
+  /// \see dotsig::IIdentity::Verify
   class IIdentity {
   public:
     IIdentity() {}
@@ -42,6 +53,10 @@ namespace dotsig {
   /// with Botan's pk_keys.h format. Method implementations must be provided
   /// by these classes for the methods: algorithm_identifier, private_key_bits
   /// and public_key_bits, as found in Botan::Private_Key and Botan::Public_Key.
+  ///
+  /// \tparam PrivateKeyImpl The private key implementation class.
+  /// \tparam PublicKeyImpl  The public key implementation class.
+  /// \see dotsig::IIdentity
   template <class PrivateKeyImpl, class PublicKeyImpl>
   class Identity : public IIdentity
   {
