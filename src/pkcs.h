@@ -1,4 +1,4 @@
-/**
+/*
  * This source code file is part of dotsig and released under the 3-Clause BSD
  * License attached in a LICENSE file in the root directory of the project.
  *
@@ -21,8 +21,9 @@ namespace PKCS {
   /// \brief Type for PKCS public keys. Mostly added for augmented code clarity.
   typedef Botan::RSA_PublicKey  PublicKey;
 
-  /// \brief Type that specializes the \see dotsig::Identity template class and
+  /// \brief Type that specializes the dotsig::Identity template class and
   ///        which is used as the parent class for PKCS identities.
+  /// \see dotsig::Identity
   typedef dotsig::Identity<PrivateKey, PublicKey> ParentType;
 
   /// \brief Class template for PKCS (RSA) identities that consist of a keypair.

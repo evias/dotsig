@@ -1,4 +1,4 @@
-/**
+/*
  * This source code file is part of dotsig and released under the 3-Clause BSD
  * License attached in a LICENSE file in the root directory of the project.
  *

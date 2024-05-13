@@ -1,4 +1,4 @@
-/**
+/*
  * This source code file is part of dotsig and released under the 3-Clause BSD
  * License attached in a LICENSE file in the root directory of the project.
  *
@@ -86,21 +86,17 @@ namespace OpenPGP {
     : public IIdentity
   {
   protected:
-    //typedef std::unique_ptr<SubKeyImpl> SubKeyUniquePtr;
+    /// \brief Contains a unique pointer to the private key implementation.
+    /// \note This member variable is wiped-out ("zero'd") by the destructor.
     std::unique_ptr<PrivateKeyImpl> m_private_key;
 
   public:
+    /// \brief Contains a unique pointer to the public key implementation.
+    /// \note This member variable is wiped-out ("zero'd") by the destructor.
     std::unique_ptr<PublicKeyImpl>  m_public_key;
-
-    /// \brief Contains a list of subkeys as defined with OpenPGP.
-    /// \note The subkeys functionality is not yet implemented.
-    //std::vector<SubKeyUniquePtr>    m_sub_keys;
 
     /// \brief Contains a *padding scheme with hash function* in the case of
     ///        OpenPGP with RSA (PKCS1 v1.5), otherwise contains a *hash function*.
-    /// \example "PKCS1v15(SHA-256)" // padding scheme and hash function
-    /// \example "SHA-256" // hash function (used in OpenPGP::ECDSA_Identity)
-    /// \example "SHA-512" // hash function (used in OpenPGP::EdDSA_Identity)
     std::string                     m_scheme;
 
     /// \brief Default constructor. Creates an empty OpenPGP identity.

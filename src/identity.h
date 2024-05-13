@@ -1,4 +1,4 @@
-/**
+/*
  * This source code file is part of dotsig and released under the 3-Clause BSD
  * License attached in a LICENSE file in the root directory of the project.
  *
@@ -61,9 +61,13 @@ namespace dotsig {
   class Identity : public IIdentity
   {
   protected:
+    /// \brief Contains a unique pointer to the private key implementation.
+    /// \note This member variable is wiped-out ("zero'd") by the destructor.
     std::unique_ptr<PrivateKeyImpl> m_private_key;
 
   public:
+    /// \brief Contains a unique pointer to the public key implementation.
+    /// \note This member variable is wiped-out ("zero'd") by the destructor.
     std::unique_ptr<PublicKeyImpl>  m_public_key;
 
     /// \brief Default constructor. Creates an empty identity.
