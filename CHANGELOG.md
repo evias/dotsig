@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0-RC.1 - 2024-05-13
+
+### Added
+
+- feat: add openpgp-compatible RSA signatures
+- feat: add OpenPGP::Identity template and support for RSA, DSA, ECDSA and EdDSA
+- feat: add get_option implementation with default value
+- feat: enables openpgp, openpgp:dsa, openpgp:ecdsa and openpgp:eddsa
+- options: accepts -a openpgp:{type} with values: rsa, dsa, ecdsa and eddsa
+
+### Changed
+
+- core: algorithm "pkcs" now uses PKCS1v15(SHA-256) signature padding scheme
+- build: more package metadata and set install folder permissions
+- docs: add correct identity filenames
+- fix: update docs and filenames for openpgp
+- docs: fix license text appearing in docs, add missing variable docs
+
 ## v1.0.0-beta.4 - 2024-05-09
 
 ### Added
@@ -52,3 +70,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - v1.0.0-beta: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta
 - v1.0.0-beta.3: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.3
 - v1.0.0-beta.4: https://github.com/evias/dotsig/releases/tag/v1.0.0-beta.4
+- v1.1.0-RC.1: https://github.com/evias/dotsig/releases/tag/v1.1.0-RC.1
