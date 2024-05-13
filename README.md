@@ -187,7 +187,7 @@ Licensed under the [3-Clause BSD License](./LICENSE).
 
 [self]: https://github.com/evias/dotsig
 [download]: https://github.com/evias/dotsig/releases/tag/v1.1.0-RC.1
-[docs]: https://evias.be/dotsig/v1.0.0-beta/index.html
+[docs]: https://evias.be/dotsig/v1.1.0/index.html
 [issues]: https://github.com/evias/dotsig/issues
 [botan-src]: https://github.com/randombit/botan
 [botan]: https://botan.randombit.net/handbook/building.html
