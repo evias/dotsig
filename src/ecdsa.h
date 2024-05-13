@@ -31,6 +31,10 @@ namespace ECDSA {
   /// and Botan::ECDSA_PublicKey. This implementation can be used to generate,
   /// import and/or export ECDSA keys, as well as to sign messages or files
   /// digitally using the ECDSA standard for digital signatures.
+  ///
+  /// \note This identity wrapper exports BER-encoded private keys to the user's
+  /// home folder, in a file named `id_ecdsa` and it exports PEM-encoded public
+  /// keys to the user's home folder, in a file named `id_ecdsa.pub`.
   class Identity final
     : public ParentType
   {

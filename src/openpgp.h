@@ -159,8 +159,8 @@ namespace OpenPGP {
   /// Botan::DSA_PrivateKey and Botan::DSA_PublicKey.
   ///
   /// \note This identity wrapper exports BER-encoded private keys to the user's
-  /// home folder, in a file named `id_openpgp` and it exports PEM-encoded public
-  /// keys to the user's home folder, in a file named `id_openpgp.pub`.
+  /// home folder, in a file named `id_openpgp.dsa` and it exports PEM-encoded public
+  /// keys to the user's home folder, in a file named `id_openpgp.dsa.pub`.
   class DSA_Identity final
     : public OpenPGP_DSA_ParentType
   {
@@ -205,8 +205,8 @@ namespace OpenPGP {
   /// Botan::ECDSA_PrivateKey and Botan::ECDSA_PublicKey.
   ///
   /// \note This identity wrapper exports BER-encoded private keys to the user's
-  /// home folder, in a file named `id_openpgp` and it exports PEM-encoded public
-  /// keys to the user's home folder, in a file named `id_openpgp.pub`.
+  /// home folder, in a file named `id_openpgp.ecdsa` and it exports PEM-encoded
+  /// public keys to the user's home folder, in a file named `id_openpgp.ecdsa.pub`.
   class ECDSA_Identity final
     : public OpenPGP_ECDSA_ParentType
   {
@@ -255,8 +255,8 @@ namespace OpenPGP {
   ///
   /// \note Signatures are **not compatible** with `Ed25519ph` signature scheme.
   /// \note This identity wrapper exports BER-encoded private keys to the user's
-  /// home folder, in a file named `id_openpgp` and it exports PEM-encoded public
-  /// keys to the user's home folder, in a file named `id_openpgp.pub`.
+  /// home folder, in a file named `id_openpgp.eddsa` and it exports PEM-encoded
+  /// public keys to the user's home folder, in a file named `id_openpgp.eddsa.pub`.
   class EdDSA_Identity final
     : public OpenPGP_EdDSA_ParentType
   {
