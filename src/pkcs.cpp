@@ -117,7 +117,7 @@ std::string dotsig::PKCS::Identity::Sign(
   Botan::AutoSeeded_RNG rng;
 
   // initialize a signer instance with the message
-  Botan::PK_Signer signer(*m_private_key, rng, "EMSA2(SHA-256)");
+  Botan::PK_Signer signer(*m_private_key, rng, "PKCS1v15(SHA-256)");
   signer.update(message);
   std::vector<uint8_t> sig = signer.signature(rng);
 
@@ -135,7 +135,7 @@ bool dotsig::PKCS::Identity::Verify(
   const std::string& message
 ) const {
   // initialize a verifier instance with the message
-  Botan::PK_Verifier verifier(*m_public_key, "EMSA2(SHA-256)");
+  Botan::PK_Verifier verifier(*m_public_key, "PKCS1v15(SHA-256)");
   verifier.update(message);
 
   std::vector<uint8_t> raw_signature(signature.begin(), signature.end());

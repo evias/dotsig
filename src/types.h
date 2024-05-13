@@ -20,7 +20,11 @@ namespace dotsig {
   std::vector<std::string> TYPES = {
     "ecdsa",
     "pkcs",
-    "openpgp"
+    "openpgp",
+    "openpgp:rsa",
+    "openpgp:dsa",
+    "openpgp:ecdsa",
+    "openpgp:eddsa"
   };
 
   /// \brief Returns one of the supported DSA types as listed in \see TYPES.
@@ -50,8 +54,16 @@ namespace dotsig {
     std::string algo = get_dsa_type(dsa),
                 file = "id_ecdsa";
 
-    if (algo == "pkcs" || algo == "openpgp")
+    if (algo == "pkcs")
       file = "id_rsa";
+    else if (algo == "openpgp" || algo == "openpgp:rsa")
+      file = "id_openpgp";
+    else if (algo == "openpgp:dsa")
+      file = "id_openpgp.dsa";
+    else if (algo == "openpgp:ecdsa")
+      file = "id_openpgp.ecdsa";
+    else if (algo == "openpgp:eddsa")
+      file = "id_openpgp.eddsa";
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}
@@ -69,8 +81,16 @@ namespace dotsig {
     std::string algo = get_dsa_type(dsa),
                 file = "id_ecdsa.pub";
 
-    if (algo == "pkcs" || algo == "openpgp")
+    if (algo == "pkcs")
       file = "id_rsa.pub";
+    else if (algo == "openpgp" || algo == "openpgp:rsa")
+      file = "id_openpgp.pub";
+    else if (algo == "openpgp:dsa")
+      file = "id_openpgp.dsa.pub";
+    else if (algo == "openpgp:ecdsa")
+      file = "id_openpgp.ecdsa.pub";
+    else if (algo == "openpgp:eddsa")
+      file = "id_openpgp.eddsa.pub";
 
     // if the storage path does not exist, creates the directory
     // Windows: {APPDATA}\.dotsig\{file} ; Unix: {home}/.dotsig/{file}

@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
   std::vector FILES = dotsig::get_files();
   std::string file = dotsig::get_option("file"),
               algo = dotsig::get_option("-a"),
+              mode = dotsig::get_flag("-c") ? "Verification" : "Signature",
               priv = dotsig::get_option("-i"),
               pub  = dotsig::get_option("-P"),
               buffer;
@@ -58,12 +59,11 @@ int main(int argc, char* argv[])
   std::string pass = dotsig::get_option("-p");
   if (pass.empty() || pass == "-") pass = dotsig::get_password();
 
-  // accepts "ecdsa" (default) or "pkcs" or "openpgp"
+  // accepts "ecdsa" (default), "pkcs", "openpgp", "openpgp:rsa", etc.
   algo = dotsig::get_dsa_type(algo);
 
-  debug() << "Mode: "
-          << (dotsig::get_flag("-c") ? "Verification" : "Signature")
-          << std::endl;
+  debug() << "Algorithm: " << algo << std::endl
+          << "Mode: " << mode << std::endl;
 
   std::string id_file, message;
   try {
