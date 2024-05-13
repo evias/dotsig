@@ -6,6 +6,8 @@
  */
 #include "openpgp.h"
 #include <botan/auto_rng.h> // AutoSeeded_RNG
+#include <botan/ec_group.h> // EC_Group (ECDSA, EdDSA)
+#include <botan/dl_group.h> // DL_Group (DSA)
 #include <botan/pkcs8.h> // PKCS8::PEM_encode
 #include <botan/x509_key.h> // X509::PEM_encode
 #include <botan/pubkey.h> // PK_Signer
@@ -14,34 +16,40 @@
 #include <filesystem> // std::filesystem
 #include <stdexcept> // std::runtime_error
 
-dotsig::OpenPGP::Identity::~Identity() {
-  // take-over ownership
-  dotsig::OpenPGP::PrivateKey* priv = m_private_key.release();
-  dotsig::OpenPGP::PublicKey*   pub = m_public_key.release();
+// -------------------------------------------------------------
+// Implementation of dotsig::OpenPGP::Identity template class
+// -------------------------------------------------------------
 
-  // zeroing key memory space
-  std::memset(reinterpret_cast<void*>(&priv), 0, sizeof(priv));
-  std::memset(reinterpret_cast<void*>(&pub), 0, sizeof(pub));
-
-  // pointer deletion
-  delete priv;
-  delete pub;
-}
-
-void dotsig::OpenPGP::Identity::GenerateRandom() {
-  Botan::AutoSeeded_RNG rng;
-
-  m_private_key = std::make_unique<dotsig::OpenPGP::PrivateKey>(
-    rng, 2048
+// Copy constructor. Creates an identity based on the other's private key.
+template <
+  class PrivateKeyImpl,
+  class PublicKeyImpl,
+  class SubKeyImpl
+>
+dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>::Identity(
+  const Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>& other
+) : dotsig::IIdentity(), m_scheme(other.m_scheme)
+{
+  m_private_key = std::make_unique<PrivateKeyImpl>(
+    (other.m_private_key)->algorithm_identifier(),
+    (other.m_private_key)->private_key_bits()
   );
 
-  m_public_key  = std::make_unique<dotsig::OpenPGP::PublicKey>(
+  m_public_key = std::make_unique<PublicKeyImpl>(
     m_private_key->algorithm_identifier(),
     m_private_key->public_key_bits()
   );
+
+  //m_sub_keys = {}; // Not yet implemented
 }
 
-const dotsig::OpenPGP::ParentType& dotsig::OpenPGP::Identity::Import(
+template <
+  class PrivateKeyImpl,
+  class PublicKeyImpl,
+  class SubKeyImpl
+>
+const dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>&
+dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>::Import(
   const std::string& filename,
   const std::string& passphrase
 ) {
@@ -52,7 +60,7 @@ const dotsig::OpenPGP::ParentType& dotsig::OpenPGP::Identity::Import(
     Botan::DataSource_Stream input(filename); // non-binary mode (PEM)
     std::unique_ptr<Botan::Public_Key> pub = Botan::X509::load_key(input);
 
-    m_public_key = std::make_unique<dotsig::OpenPGP::PublicKey>(
+    m_public_key = std::make_unique<PublicKeyImpl>(
       pub->algorithm_identifier(),
       pub->public_key_bits()
     );
@@ -69,11 +77,11 @@ const dotsig::OpenPGP::ParentType& dotsig::OpenPGP::Identity::Import(
       passphrase
     );
 
-    m_private_key = std::make_unique<dotsig::OpenPGP::PrivateKey>(
+    m_private_key = std::make_unique<PrivateKeyImpl>(
       priv->algorithm_identifier(), priv->private_key_bits()
     );
 
-    m_public_key = std::make_unique<dotsig::OpenPGP::PublicKey>(
+    m_public_key = std::make_unique<PublicKeyImpl>(
       m_private_key->algorithm_identifier(),
       m_private_key->public_key_bits()
     );
@@ -88,7 +96,13 @@ const dotsig::OpenPGP::ParentType& dotsig::OpenPGP::Identity::Import(
   throw std::runtime_error("Loading identity file failed (" + err_string + ")");
 }
 
-void dotsig::OpenPGP::Identity::Export(
+template <
+  class PrivateKeyImpl,
+  class PublicKeyImpl,
+  class SubKeyImpl
+>
+void
+dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>::Export(
   const std::string& filename,
   const std::string& passphrase
 ) const {
@@ -110,14 +124,20 @@ void dotsig::OpenPGP::Identity::Export(
   out_pub.close();
 }
 
-std::string dotsig::OpenPGP::Identity::Sign(
+template <
+  class PrivateKeyImpl,
+  class PublicKeyImpl,
+  class SubKeyImpl
+>
+std::string
+dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>::Sign(
   const std::string& message,
   const std::string& sig_file
 ) const {
   Botan::AutoSeeded_RNG rng;
 
-  // initialize a signer instance with the message (uses EMSA PKCS1 v1.5)
-  Botan::PK_Signer signer(*m_private_key, rng, "PKCS1v15(SHA-256)");
+  // initialize a signer instance with the message
+  Botan::PK_Signer signer(*m_private_key, rng, m_scheme);
   signer.update(message);
   std::vector<uint8_t> sig = signer.signature(rng);
 
@@ -130,14 +150,148 @@ std::string dotsig::OpenPGP::Identity::Sign(
   return Botan::hex_encode(sig);
 }
 
-bool dotsig::OpenPGP::Identity::Verify(
+template <
+  class PrivateKeyImpl,
+  class PublicKeyImpl,
+  class SubKeyImpl
+>
+bool
+dotsig::OpenPGP::Identity<PrivateKeyImpl, PublicKeyImpl, SubKeyImpl>::Verify(
   const std::string& signature,
   const std::string& message
 ) const {
-  // initialize a verifier instance with the message (uses EMSA PKCS1 v1.5)
-  Botan::PK_Verifier verifier(*m_public_key, "PKCS1v15(SHA-256)");
+  // initialize a verifier instance with the message
+  Botan::PK_Verifier verifier(*m_public_key, m_scheme);
   verifier.update(message);
 
   std::vector<uint8_t> raw_signature(signature.begin(), signature.end());
   return verifier.check_signature(raw_signature);
+}
+
+// -------------------------------------------------------------
+// Implementation of dotsig::OpenPGP::DSA_Identity class
+// -------------------------------------------------------------
+
+/// \todo when sub-keys are created, also wipe sub-keys memory space
+dotsig::OpenPGP::DSA_Identity::~DSA_Identity() {
+  // take-over ownership
+  dotsig::OpenPGP_DSA_PrivateKey* priv = m_private_key.release();
+  dotsig::OpenPGP_DSA_PublicKey*   pub = m_public_key.release();
+
+  // zeroing key memory space
+  std::memset(reinterpret_cast<void*>(&priv), 0, sizeof(priv));
+  std::memset(reinterpret_cast<void*>(&pub), 0, sizeof(pub));
+
+  // pointer deletion
+  delete priv;
+  delete pub;
+}
+
+void dotsig::OpenPGP::DSA_Identity::GenerateRandom() {
+  Botan::AutoSeeded_RNG rng;
+
+  m_private_key = std::make_unique<dotsig::OpenPGP_DSA_PrivateKey>(
+    rng, Botan::DL_Group("dsa/jce/1024")
+  );
+
+  m_public_key  = std::make_unique<dotsig::OpenPGP_DSA_PublicKey>(
+    m_private_key->algorithm_identifier(),
+    m_private_key->public_key_bits()
+  );
+}
+
+// -------------------------------------------------------------
+// Implementation of dotsig::OpenPGP::ECDSA_Identity class
+// -------------------------------------------------------------
+
+/// \todo when sub-keys are created, also wipe sub-keys memory space
+dotsig::OpenPGP::ECDSA_Identity::~ECDSA_Identity() {
+  // take-over ownership
+  dotsig::OpenPGP_ECDSA_PrivateKey* priv = m_private_key.release();
+  dotsig::OpenPGP_ECDSA_PublicKey*   pub = m_public_key.release();
+
+  // zeroing key memory space
+  std::memset(reinterpret_cast<void*>(&priv), 0, sizeof(priv));
+  std::memset(reinterpret_cast<void*>(&pub), 0, sizeof(pub));
+
+  // pointer deletion
+  delete priv;
+  delete pub;
+}
+
+void dotsig::OpenPGP::ECDSA_Identity::GenerateRandom() {
+  Botan::AutoSeeded_RNG rng;
+
+  m_private_key = std::make_unique<dotsig::OpenPGP_ECDSA_PrivateKey>(
+    rng, Botan::EC_Group("secp256r1")
+  );
+
+  m_public_key  = std::make_unique<dotsig::OpenPGP_ECDSA_PublicKey>(
+    m_private_key->algorithm_identifier(),
+    m_private_key->public_key_bits()
+  );
+}
+
+// -------------------------------------------------------------
+// Implementation of dotsig::OpenPGP::EdDSA_Identity class
+// -------------------------------------------------------------
+
+/// \todo when sub-keys are created, also wipe sub-keys memory space
+dotsig::OpenPGP::EdDSA_Identity::~EdDSA_Identity() {
+  // take-over ownership
+  dotsig::OpenPGP_EdDSA_PrivateKey* priv = m_private_key.release();
+  dotsig::OpenPGP_EdDSA_PublicKey*   pub = m_public_key.release();
+
+  // zeroing key memory space
+  std::memset(reinterpret_cast<void*>(&priv), 0, sizeof(priv));
+  std::memset(reinterpret_cast<void*>(&pub), 0, sizeof(pub));
+
+  // pointer deletion
+  delete priv;
+  delete pub;
+}
+
+void dotsig::OpenPGP::EdDSA_Identity::GenerateRandom() {
+  Botan::AutoSeeded_RNG rng;
+
+  m_private_key = std::make_unique<dotsig::OpenPGP_EdDSA_PrivateKey>(
+    rng, Botan::EC_Group("secp256r1")
+  );
+
+  m_public_key  = std::make_unique<dotsig::OpenPGP_EdDSA_PublicKey>(
+    m_private_key->algorithm_identifier(),
+    m_private_key->public_key_bits()
+  );
+}
+
+// -------------------------------------------------------------
+// Implementation of dotsig::OpenPGP::RSA_Identity class
+// -------------------------------------------------------------
+
+/// \todo when sub-keys are created, also wipe sub-keys memory space
+dotsig::OpenPGP::RSA_Identity::~RSA_Identity() {
+  // take-over ownership
+  dotsig::OpenPGP_RSA_PrivateKey* priv = m_private_key.release();
+  dotsig::OpenPGP_RSA_PublicKey*   pub = m_public_key.release();
+
+  // zeroing key memory space
+  std::memset(reinterpret_cast<void*>(&priv), 0, sizeof(priv));
+  std::memset(reinterpret_cast<void*>(&pub), 0, sizeof(pub));
+
+  // pointer deletion
+  delete priv;
+  delete pub;
+}
+
+void dotsig::OpenPGP::RSA_Identity::GenerateRandom() {
+  Botan::AutoSeeded_RNG rng;
+
+  m_private_key = std::make_unique<dotsig::OpenPGP_RSA_PrivateKey>(
+    rng, 2048
+  );
+
+  m_public_key  = std::make_unique<dotsig::OpenPGP_RSA_PublicKey>(
+    m_private_key->algorithm_identifier(),
+    m_private_key->public_key_bits()
+  );
 }
