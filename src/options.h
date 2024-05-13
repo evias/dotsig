@@ -85,6 +85,13 @@ namespace dotsig {
   /// \return The value of the option or an empty string.
   std::string get_option(const std::string&);
 
+  /// \brief Reads the value of an option \a opt as passed to the program and if
+  ///        the value is not in options, returns the default value \a d.
+  /// \param opt The name of the option to be read.
+  /// \param d The default value returned if the option is not set.
+  /// \return The value of the option or the default value.
+  std::string get_option(const std::string&, const std::string&);
+
   /// \brief Reads the value of a flag \a opt as passed to the program.
   /// \param opt The name of the flag to be read.
   /// \return True if the flag is set (through options), false otherwise.

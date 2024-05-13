@@ -75,6 +75,15 @@ std::string dotsig::get_option(const std::string& opt) {
   return (*find_it).second;
 }
 
+std::string dotsig::get_option(const std::string& opt, const std::string& d)
+{
+  auto find_it = OPTIONS.find(opt);
+  if (OPTIONS.end() == find_it)
+    return d;
+
+  return (*find_it).second;
+}
+
 bool dotsig::get_flag(const std::string& opt) {
   return !get_option(opt).empty();
 }
